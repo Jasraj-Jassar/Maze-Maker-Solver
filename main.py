@@ -6,13 +6,13 @@ from random_grid import random_grid_genrator
 from keyboard_interface import keyboard_interface
 from moveit_mouse import red_mouse
 
-# Initialize main window    
+# Initialize main window
 window = tk.Tk()
 
 # Define grid dimensions
-row = 22  # Number of rows
+row = 8  # Number of rows
 col = row  # Number of columns, assuming a square grid
-box_size = 40  # Size of each grid cell
+box_size = row * 10 # Size of each grid cell
 margine = box_size
 
 maze = random_grid_genrator(row, col)
