@@ -8,12 +8,15 @@ from random_grid import random_grid_genrator
 window = tk.Tk()
 
 # Define grid dimensions
+row = 8  # Number of rows
+col = row  # Number of columns, assuming a square grid
 box_size = 160  # Size of each grid cell
+margine = box_size
 
-maze = random_grid_genrator(8, 8)
 
+maze = random_grid_genrator(row, col)
 # Create the grid and standardize start/end positions
-board = make_grid(maze, box_size, window)
-standard_start_end = standardize_start_end(box_size, board)
+board = make_grid(maze, margine, box_size, window)
+standard_start_end = standardize_start_end(row, col, margine, box_size, board)
 # Start the main event loop
 window.mainloop() 

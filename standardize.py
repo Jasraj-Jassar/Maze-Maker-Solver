@@ -1,15 +1,16 @@
 from remove_line import clear_grid_line
 
-def standardize_start_end(box_size, margin, board):
+def standardize_start_end(row, col, margin, box_size, board):
     """
     Standardizes the start and end points of the grid.
     """
+
     # Define start point at top-left corner (0,0)
     start_x = 0
     start_y = 0
 
-    end_x = 4
-    end_y = 3
+    end_x = row
+    end_y = col - 1
 
     # Remove the wall to create entrance and exit
     clear_grid_line(start_x, start_y, box_size, margin, board) 
