@@ -1,13 +1,10 @@
 import tkinter as tk
-def red_mouse(grid, margin, box_size, board):
+def red_mouse(row, col, margin, box_size, board, color):
     """
     Creates a user interface for the maze game.
     """
-    row = 0
-    col = 0
 
     if row >= -1 or col >= -1:
-        color = 'red'
         x1 = row * box_size + margin
         y1 = col * box_size + margin
         x2 = x1 + box_size
