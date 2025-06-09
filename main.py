@@ -1,5 +1,6 @@
 import cv2
 import tkinter as tk
+import time
 from types import SimpleNamespace
 
 from grid import make_grid
@@ -11,11 +12,13 @@ from moveit_mouse import red_mouse
 
 from cv_operations.capture_canvas import capture_canvas
 from cv_operations.img_processing import img_processing
+from cv_operations.random_solver import random_solver
 
 
 # Initialize main window
 intialize = True
 window = tk.Tk()
+next_random_move = 'enter'
 
 # Define grid dimensions
 row = 8  # Number of rows
@@ -53,26 +56,32 @@ def on_key(event):
     red_mouse(current_row, current_col, margine, box_size, board, color = 'red',)
     #capture the canvas and display it using OpenCV
     canvas_img = capture_canvas(board)
-    img_processing(canvas_img)
-    
+    canvas_mouse_pos,circles_pos = img_processing(canvas_img)
+    global next_random_move
+    next_random_move = random_solver(canvas_mouse_pos, circles_pos)
     if current_row == row - 1 and current_col == col - 1: # when the mouse reaches the end of the maze it quits the program
         print("Reached the end of the maze!")
         window.quit()
+    
+    cv2.imshow("Maze Capture", canvas_mouse_pos)
+    cv2.waitKey(1)
+    time.sleep(0.1)  # Add a small delay to allow OpenCV to update the window
+
 
 
 def simulate_keypress_after_render():
-    window.update()
-    window.update_idletasks()
-    fake_event = SimpleNamespace(keysym='enter')
+    global next_random_move
+    print(f"Simulating keypress: {next_random_move}")
+    fake_event = SimpleNamespace(keysym=next_random_move)
     on_key(fake_event)
-
+    window.after(100, simulate_keypress_after_render)  # Schedule next move
 
 # Always bind key events
 window.bind('<Key>', on_key)
 
 # Conditionally simulate keypress after GUI has rendered
 if intialize:
-    intialize = False
+    #intialize = False
     window.after(100, simulate_keypress_after_render)
 
 

@@ -5,7 +5,7 @@ import numpy as np
 
 def img_processing(canvas_img):
     # Convert the image to grayscale
-    src = canvas_img
+    canvas_mouse_pos = canvas_img
 
     #Filtering the other colors so only red mouse is visible
     canvas_hsv_img = cv2.cvtColor(canvas_img, cv2.COLOR_BGR2HSV)
@@ -15,7 +15,7 @@ def img_processing(canvas_img):
 
     rows = canvas_gray_img.shape[0]
     
-    circles = cv2.HoughCircles(
+    circles_pos = cv2.HoughCircles(
         canvas_mask_img,
         cv2.HOUGH_GRADIENT,
         dp=1.2,
@@ -26,16 +26,15 @@ def img_processing(canvas_img):
         maxRadius=40
     )
     
-    if circles is not None:
-        print("Circles found:", circles)
-        circles = np.uint16(np.around(circles))
-        for i in circles[0, :]:
+    if circles_pos is not None:
+        print("Circles found:", circles_pos)
+        circles_pos = np.uint16(np.around(circles_pos))
+        for i in circles_pos[0, :]:
             center = (i[0], i[1])
             # circle center
-            cv2.circle(src, center, 1, (0, 100, 100), 3)
+            cv2.circle(canvas_mouse_pos, center, 1, (0, 100, 100), 3)
             # circle outline
             radius = i[2]
-            cv2.circle(src, center, radius, (0, 120, 0), 3)
+            cv2.circle(canvas_mouse_pos, center, radius, (0, 120, 0), 3)
     
-    cv2.imshow("Maze Capture", src)
-    cv2.waitKey(1)
+    return canvas_mouse_pos, circles_pos
