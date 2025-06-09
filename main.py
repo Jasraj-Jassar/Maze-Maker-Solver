@@ -7,9 +7,10 @@ from random_grid import random_grid_genrator
 from keyboard_interface import keyboard_interface
 from moveit_mouse import red_mouse
 from capture_canvas import capture_canvas
-
+from types import SimpleNamespace
 
 # Initialize main window
+intialize = True
 window = tk.Tk()
 
 # Define grid dimensions
@@ -29,6 +30,11 @@ current_col = 0
 red_mouse(current_row, current_col, margine, box_size, board, color='red')
 
 
+#initialize openvcv window  
+canvas_img = capture_canvas(board)
+cv2.imshow("Maze Capture", canvas_img)
+cv2.waitKey(1)
+
 def on_key(event):
     global current_row, current_col
     red_mouse(current_row, current_col, margine, box_size, board, color = 'black')
@@ -47,8 +53,21 @@ def on_key(event):
     cv2.waitKey(1)
 
 
-# Bind keyboard events
+def simulate_keypress_after_render():
+    window.update()
+    window.update_idletasks()
+    fake_event = SimpleNamespace(keysym='enter', widget=window)
+    on_key(fake_event)
+
+
+# Always bind key events
 window.bind('<Key>', on_key)
+
+# Conditionally simulate keypress after GUI has rendered
+if intialize:
+    intialize = False
+    window.after(100, simulate_keypress_after_render)
+
 
 # Start the main event loop
 window.mainloop() 
