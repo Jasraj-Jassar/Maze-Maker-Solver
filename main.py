@@ -49,11 +49,15 @@ def on_key(event):
     current_row = max(0, min(current_row, row - 1))
     current_col = max(0, min(current_col, col - 1))
     # Update mouse position
+    print(f"Current Position: ({current_row}, {current_col})")
     red_mouse(current_row, current_col, margine, box_size, board, color = 'red',)
-
     #capture the canvas and display it using OpenCV
     canvas_img = capture_canvas(board)
     img_processing(canvas_img)
+    
+    if current_row == row - 1 and current_col == col - 1: # when the mouse reaches the end of the maze it quits the program
+        print("Reached the end of the maze!")
+        window.quit()
 
 
 def simulate_keypress_after_render():
