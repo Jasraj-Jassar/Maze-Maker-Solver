@@ -23,6 +23,6 @@ def make_grid(grid, margin, box_size, window):
             y1 = y * box_size + margin
             x2 = x1 + box_size
             y2 = y1 + box_size
-            board.create_rectangle(x1, y1, x2, y2, fill=color, outline='black')
+            board.create_rectangle(x1, y1, x2, y2, fill=color, outline='white')
 
     return board

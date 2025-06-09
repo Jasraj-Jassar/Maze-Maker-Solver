@@ -13,12 +13,15 @@ from moveit_mouse import red_mouse
 from cv_operations.capture_canvas import capture_canvas
 from cv_operations.img_processing import img_processing
 from cv_operations.random_solver import random_solver
+from cv_operations.smatter_solver import smatter_solver
+from cv_operations.goal_recognizer import goal_recognizer
 
 
 # Initialize main window
 intialize = True
 window = tk.Tk()
 next_random_move = 'enter'
+selected_solver = 'smatter_approach'  # Set the solver type
 
 # Define grid dimensions
 row = 8  # Number of rows
@@ -56,9 +59,25 @@ def on_key(event):
     red_mouse(current_row, current_col, margine, box_size, board, color = 'red',)
     #capture the canvas and display it using OpenCV
     canvas_img = capture_canvas(board)
-    canvas_mouse_pos,circles_pos = img_processing(canvas_img)
-    global next_random_move
-    next_random_move = random_solver(canvas_mouse_pos, circles_pos)
+
+
+    if selected_solver == 'random':
+        # the follwoing is the random solver
+        global next_random_move
+        canvas_mouse_pos,circles_pos = img_processing(canvas_img) # the coords of the mouse 
+        next_random_move = random_solver(canvas_mouse_pos, circles_pos)
+        time.sleep(3.1) 
+
+    if selected_solver == 'smatter_approach':
+        # the follwoing is the random solver
+        canvas_mouse_pos,circles_pos = img_processing(canvas_img) # the coords of the mouse 
+        canvas_mouse_pos, goal_box_coord = goal_recognizer(canvas_mouse_pos) # the coords of the goal box
+        print(f"Goal Position: {goal_box_coord}")
+        # global next_smatter_move
+        # next_smatter_move = goal_recognizer(canvas_mouse_pos,goal_pos, circles_pos)
+        time.sleep(3.1) 
+
+
     if current_row == row - 1 and current_col == col - 1: # when the mouse reaches the end of the maze it quits the program
         print("Reached the end of the maze!")
         window.quit()
