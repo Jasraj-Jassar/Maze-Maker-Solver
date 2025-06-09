@@ -1,13 +1,17 @@
-import tkinter as tk
 import cv2
+import tkinter as tk
+from types import SimpleNamespace
+
 from grid import make_grid
 from remove_line import clear_grid_line
 from standardize import standardize_start_end
 from random_grid import random_grid_genrator
 from keyboard_interface import keyboard_interface
 from moveit_mouse import red_mouse
-from capture_canvas import capture_canvas
-from types import SimpleNamespace
+
+from cv_operations.capture_canvas import capture_canvas
+from cv_operations.img_processing import img_processing
+
 
 # Initialize main window
 intialize = True
@@ -49,14 +53,13 @@ def on_key(event):
 
     #capture the canvas and display it using OpenCV
     canvas_img = capture_canvas(board)
-    cv2.imshow("Maze Capture", canvas_img)
-    cv2.waitKey(1)
+    img_processing(canvas_img)
 
 
 def simulate_keypress_after_render():
     window.update()
     window.update_idletasks()
-    fake_event = SimpleNamespace(keysym='enter', widget=window)
+    fake_event = SimpleNamespace(keysym='enter')
     on_key(fake_event)
 
 
