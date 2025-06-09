@@ -2,6 +2,7 @@
 
 A Python project that generates mazes and finds paths through them.
 
+Love Problem Solving So... Created my own challenge
 Instead of taking the array and processing it, plan is to use opencv2 and treat it as a vision system challenge,
 
 ## Features
