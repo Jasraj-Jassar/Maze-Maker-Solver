@@ -10,7 +10,7 @@ def random_grid_genrator(rows, cols):
     # Start with all walls
     maze = [[1 for _ in range(cols)] for _ in range(rows)]
 
-    # Generate the path that goes only right or down
+    # Generate the path that goes only right or down, Because the start is at the top-left corner (0,0)
     r, c = 0, 0
     maze[r][c] = 0
     while r < rows - 1 or c < cols - 1:
