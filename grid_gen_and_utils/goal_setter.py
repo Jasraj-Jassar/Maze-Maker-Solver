@@ -1,4 +1,4 @@
-def clear_grid_line(x, y, box_size, margin, board):
+def goal_setter(x, y, box_size, margin, board):
     """
     Removes a vertical line from the grid at specified coordinates.
     """

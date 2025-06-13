@@ -3,7 +3,7 @@ import numpy as np
 
 #Resourse: https://docs.opencv.org/3.4/d4/d70/tutorial_hough_circle.html
 
-def img_processing(canvas_img):
+def mouse_pos_opencv(canvas_img):
     # Convert the image to grayscale
     canvas_mouse_pos = canvas_img
 

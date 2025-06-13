@@ -5,6 +5,7 @@ box_size = row * 10
 margine = box_size
 
 # Solver settings
+#selected_solver = "manual_mode"
 selected_solver = "smatter_approach"
 next_random_move = "enter"
 
