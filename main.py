@@ -1,49 +1,22 @@
 import cv2
-import tkinter as tk
 import time
 from types import SimpleNamespace
 
-from grid import make_grid
-from remove_line import clear_grid_line
-from standardize import standardize_start_end
-from random_grid import random_grid_genrator
 from keyboard_interface import keyboard_interface
 from moveit_mouse import red_mouse
-
 from cv_operations.capture_canvas import capture_canvas
 from cv_operations.img_processing import img_processing
 from cv_operations.random_solver import random_solver
-from cv_operations.smatter_solver import smatter_solver
-from cv_operations.goal_recognizer import goal_recognizer
-
-
-# Paramenters
-next_random_move = 'enter'
-selected_solver = 'smatter_approach'  # Set the solver type
-row = 8  # Number of rows - Defines grid dimensions
-col = row  # Number of columns, assuming a square grid
-box_size = row * 10 # Size of each grid cell
-margine = box_size
-
-# Initialize main window
-window = tk.Tk()
-maze = random_grid_genrator(row, col)
-# Create the grid and standardize start/end positions
-board = make_grid(maze, margine, box_size, window)
-standard_start_end = standardize_start_end(margine, box_size, board, row, col)
-
-# Initialize position
-board, current_row, current_col = red_mouse(margine, box_size, board) # this will use default params in the moveit_mouse.py
-
-
-#initialize openvcv window  
-canvas_img = capture_canvas(board)
-cv2.imshow("Maze Capture", canvas_img)
-cv2.waitKey(1)
+from parameters import selected_solver, next_random_move, row, col, box_size, margine
+from Initialize import maze_board
+from manual_mode import manual_mode
 
 def handle_move(event=None, is_simulated=False):
+    global next_random_move  # Add this to access the global variable
     
-    global current_row, current_col, next_random_move
+    # Get current state
+    board = maze_board.get_board()
+    current_row, current_col = maze_board.get_position()
     
     # Clear old position
     red_mouse(margine, box_size, board, "black", current_row, current_col)
@@ -62,6 +35,9 @@ def handle_move(event=None, is_simulated=False):
     current_row = max(0, min(current_row, row - 1))
     current_col = max(0, min(current_col, col - 1))
     
+    # Update position in shared board
+    maze_board.update_position(current_row, current_col)
+    
     # Update display
     print(f"Current Position: ({current_row}, {current_col})")
     red_mouse(margine, box_size, board, "red", current_row, current_col)
@@ -74,7 +50,7 @@ def handle_move(event=None, is_simulated=False):
     # Check for completion
     if current_row == row - 1 and current_col == col - 1:
         print("Reached the end of the maze!")
-        window.quit()
+        maze_board.get_window().quit()
         return
     
     # Update OpenCV window
@@ -83,14 +59,17 @@ def handle_move(event=None, is_simulated=False):
     
     # Schedule next move if this was a simulated move
     if is_simulated:
-        window.after(100, lambda: handle_move(is_simulated=True))
+        maze_board.get_window().after(100, lambda: handle_move(is_simulated=True))
 
-# Start automatic simulation
-window.after(100, lambda: handle_move(is_simulated=True))
+if selected_solver == "manual_mode":
+    # Manual key binds to handle_move
+    maze_board.get_window().bind('<Key>', manual_mode)
+
+if selected_solver == "smatter_approach":
+    # Start automatic simulation
+    maze_board.get_window().after(100, lambda: handle_move(is_simulated=True))
 
 # Start the main event loop
-window.mainloop() 
+maze_board.get_window().mainloop() 
 
 
-# # Always bind key events
-# window.bind('<Key>', handle_move) - this is manual comtrol TODO Later 
