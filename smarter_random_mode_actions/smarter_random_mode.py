@@ -17,6 +17,10 @@ def smarter_random_mode(event=None, is_simulated=False):
     # Get move direction
     if is_simulated:
         print(f"Simulating keypress: {next_random_move}")
+        if next_random_move is None:
+            # If no valid move was found, try again after a short delay
+            maze_board.get_window().after(100, lambda:smarter_random_mode(is_simulated=True))
+            return
         row_change, col_change = keyboard_interface(SimpleNamespace(keysym=next_random_move))
     else:
         row_change, col_change = keyboard_interface(event)
@@ -30,6 +34,7 @@ def smarter_random_mode(event=None, is_simulated=False):
     # Update display
     print(f"Current Position: ({current_row}, {current_col})")
     maze_board.clear_board()
+
     maze_board.update_position(current_row, current_col)
     
     # Process image and get next move

@@ -15,45 +15,40 @@ def smarter_random_solver(canvas_mouse_pos, circles_pos):
     check_left = circle_pos_x - 60
     check_right = circle_pos_x + 60
 
-    while True:
-        cases = [0, 1, 2, 3]
-        random.shuffle(cases)
+    # Try each direction at most once
+    cases = [0, 1, 2, 3]
+    random.shuffle(cases)
 
-        for case_num in cases:
-            match case_num:
-                case 0:  # Down
-                    if 0 <= check_below < canvas_mouse_pos.shape[0]:
-                        b, g, r = canvas_mouse_pos[check_below, circle_pos_x]
-                        if b < 200 and g < 200 and r < 200:
-                            print("Movable path below")
-                            return "Down"
-                        else:
-                            break  # restart
+    for case_num in cases:
+        match case_num:
+            case 0:  # Down
+                if 0 <= check_below < canvas_mouse_pos.shape[0]:
+                    b, g, r = canvas_mouse_pos[check_below, circle_pos_x]
+                    if b < 200 and g < 200 and r < 200:
+                        print("Movable path below")
+                        return "Down"
 
-                case 1:  # Up
-                    if 0 <= check_above < canvas_mouse_pos.shape[0]:
-                        b, g, r = canvas_mouse_pos[check_above, circle_pos_x]
-                        if b < 200 and g < 200 and r < 200:
-                            print("Movable path above")
-                            return "Up"
-                        else:
-                            break
+            case 1:  # Up
+                if 0 <= check_above < canvas_mouse_pos.shape[0]:
+                    b, g, r = canvas_mouse_pos[check_above, circle_pos_x]
+                    if b < 200 and g < 200 and r < 200:
+                        print("Movable path above")
+                        return "Up"
 
-                case 2:  # Left
-                    if 0 <= check_left < canvas_mouse_pos.shape[1]:
-                        b, g, r = canvas_mouse_pos[circle_pos_y, check_left]
-                        if b < 200 and g < 200 and r < 200:
-                            print("Movable path left")
-                            return "Left"
-                        else:
-                            break
+            case 2:  # Left
+                if 0 <= check_left < canvas_mouse_pos.shape[1]:
+                    b, g, r = canvas_mouse_pos[circle_pos_y, check_left]
+                    if b < 200 and g < 200 and r < 200:
+                        print("Movable path left")
+                        return "Left"
 
-                case 3:  # Right
-                    if 0 <= check_right < canvas_mouse_pos.shape[1]:
-                        b, g, r = canvas_mouse_pos[circle_pos_y, check_right]
-                        if b < 200 and g < 200 and r < 200:
-                            print("Movable path right")
-                            return "Right"
-                        else:
-                            break
-        # If no valid direction found in this loop, it will retry with a fresh shuffle
+            case 3:  # Right
+                if 0 <= check_right < canvas_mouse_pos.shape[1]:
+                    b, g, r = canvas_mouse_pos[circle_pos_y, check_right]
+                    if b < 200 and g < 200 and r < 200:
+                        print("Movable path right")
+                        return "Right"
+
+    # If no valid move is found, return None or a default direction
+    print("No valid moves found, staying in place")
+    return None
