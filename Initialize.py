@@ -1,0 +1,1 @@
+# this file works one called from main.py and initallizes the board and opencv windows 

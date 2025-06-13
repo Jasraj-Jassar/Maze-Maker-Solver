@@ -1,6 +1,6 @@
 import tkinter as tk
 
-def red_mouse(row, col, margin, box_size, board, color):
+def red_mouse(margin, box_size, board, color = "red", row = 0, col = 0):
     """
     Draws a circular marker (mouse) at the specified grid cell.
     """
@@ -11,4 +11,4 @@ def red_mouse(row, col, margin, box_size, board, color):
         y2 = y1 + box_size - 8
         board.create_oval(x1, y1, x2, y2, fill=color, outline='black')
 
-    return board
+    return board,row,col

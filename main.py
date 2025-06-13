@@ -17,27 +17,23 @@ from cv_operations.smatter_solver import smatter_solver
 from cv_operations.goal_recognizer import goal_recognizer
 
 
-# Initialize main window
-intialize = True
-window = tk.Tk()
+# Paramenters
 next_random_move = 'enter'
 selected_solver = 'smatter_approach'  # Set the solver type
-
-# Define grid dimensions
-row = 8  # Number of rows
+row = 8  # Number of rows - Defines grid dimensions
 col = row  # Number of columns, assuming a square grid
 box_size = row * 10 # Size of each grid cell
 margine = box_size
 
+# Initialize main window
+window = tk.Tk()
 maze = random_grid_genrator(row, col)
 # Create the grid and standardize start/end positions
 board = make_grid(maze, margine, box_size, window)
-standard_start_end = standardize_start_end(row, col, margine, box_size, board)
+standard_start_end = standardize_start_end(margine, box_size, board, row, col)
 
 # Initialize position
-current_row = 0
-current_col = 0
-red_mouse(current_row, current_col, margine, box_size, board, color='red')
+board, current_row, current_col = red_mouse(margine, box_size, board) # this will use default params in the moveit_mouse.py
 
 
 #initialize openvcv window  
@@ -45,64 +41,56 @@ canvas_img = capture_canvas(board)
 cv2.imshow("Maze Capture", canvas_img)
 cv2.waitKey(1)
 
-def on_key(event):
-    global current_row, current_col
-    red_mouse(current_row, current_col, margine, box_size, board, color = 'black')
-    row_change, col_change = keyboard_interface(event)
+def handle_move(event=None, is_simulated=False):
+    
+    global current_row, current_col, next_random_move
+    
+    # Clear old position
+    red_mouse(margine, box_size, board, "black", current_row, current_col)
+    
+    # Get move direction
+    if is_simulated:
+        print(f"Simulating keypress: {next_random_move}")
+        row_change, col_change = keyboard_interface(SimpleNamespace(keysym=next_random_move))
+    else:
+        row_change, col_change = keyboard_interface(event)
+    
+    # Update position
     current_row += row_change
     current_col += col_change
     # Keep within bounds
     current_row = max(0, min(current_row, row - 1))
     current_col = max(0, min(current_col, col - 1))
-    # Update mouse position
+    
+    # Update display
     print(f"Current Position: ({current_row}, {current_col})")
-    red_mouse(current_row, current_col, margine, box_size, board, color = 'red',)
-    #capture the canvas and display it using OpenCV
+    red_mouse(margine, box_size, board, "red", current_row, current_col)
+    
+    # Process image and get next move
     canvas_img = capture_canvas(board)
-
-
-    if selected_solver == 'random':
-        # the follwoing is the random solver
-        global next_random_move
-        canvas_mouse_pos,circles_pos = img_processing(canvas_img) # the coords of the mouse 
-        next_random_move = random_solver(canvas_mouse_pos, circles_pos)
-        time.sleep(3.1) 
-
-    if selected_solver == 'smatter_approach':
-        # the follwoing is the random solver
-        canvas_mouse_pos,circles_pos = img_processing(canvas_img) # the coords of the mouse 
-        canvas_mouse_pos, goal_box_coord = goal_recognizer(canvas_mouse_pos) # the coords of the goal box
-        print(f"Goal Position: {goal_box_coord}")
-        # global next_smatter_move
-        # next_smatter_move = goal_recognizer(canvas_mouse_pos,goal_pos, circles_pos)
-        time.sleep(3.1) 
-
-
-    if current_row == row - 1 and current_col == col - 1: # when the mouse reaches the end of the maze it quits the program
+    canvas_mouse_pos, circles_pos = img_processing(canvas_img)
+    next_random_move = random_solver(canvas_mouse_pos, circles_pos)
+    
+    # Check for completion
+    if current_row == row - 1 and current_col == col - 1:
         print("Reached the end of the maze!")
         window.quit()
+        return
     
+    # Update OpenCV window
     cv2.imshow("Maze Capture", canvas_mouse_pos)
     cv2.waitKey(1)
-    time.sleep(0.1)  # Add a small delay to allow OpenCV to update the window
+    
+    # Schedule next move if this was a simulated move
+    if is_simulated:
+        window.after(100, lambda: handle_move(is_simulated=True))
 
-
-
-def simulate_keypress_after_render():
-    global next_random_move
-    print(f"Simulating keypress: {next_random_move}")
-    fake_event = SimpleNamespace(keysym=next_random_move)
-    on_key(fake_event)
-    window.after(100, simulate_keypress_after_render)  # Schedule next move
-
-# Always bind key events
-window.bind('<Key>', on_key)
-
-# Conditionally simulate keypress after GUI has rendered
-if intialize:
-    #intialize = False
-    window.after(100, simulate_keypress_after_render)
-
+# Start automatic simulation
+window.after(100, lambda: handle_move(is_simulated=True))
 
 # Start the main event loop
 window.mainloop() 
+
+
+# # Always bind key events
+# window.bind('<Key>', handle_move) - this is manual comtrol TODO Later 

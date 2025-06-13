@@ -1,6 +1,6 @@
 from remove_line import clear_grid_line
 
-def standardize_start_end(row, col, margin, box_size, board):
+def standardize_start_end(margin, box_size, board, row = 0, col = 0):
     """
     Standardizes the start and end points of the grid.
     """
