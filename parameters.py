@@ -1,7 +1,7 @@
 # Grid dimensions
-row = 8
+row = 4
 col = row
-box_size = row * 10
+box_size = 120
 margine = box_size
 
 # Solver settings

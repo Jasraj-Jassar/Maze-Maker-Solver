@@ -3,52 +3,37 @@ import random
 
 
 #Random maze solver it will use random moves to find a path from the start till the end of the maze.
+#Parent - random_maze_solver 
+#Child - smarter_random_solver - added funtionality to check if the next block is green if true then moves to green block.
+
 def smarter_random_solver(canvas_mouse_pos, circles_pos):
 
     # check if the top of the mouse is movable path
     circle_pos_x = int(circles_pos[0][0][0])  # x
     circle_pos_y = int(circles_pos[0][0][1])  # y
-    circle_radius = int(circles_pos[0][0][2]) # radius
 
-    check_below = circle_pos_y + 60
-    check_above = circle_pos_y - 60
-    check_left = circle_pos_x - 60
-    check_right = circle_pos_x + 60
 
-    # Try each direction at most once
-    cases = [0, 1, 2, 3]
-    random.shuffle(cases)
+    directions = {
+        "Down": (circle_pos_y + 60, circle_pos_x),
+        "Up": (circle_pos_y - 60, circle_pos_x),
+        "Left": (circle_pos_y, circle_pos_x - 60),
+        "Right": (circle_pos_y, circle_pos_x + 60),
+    }
 
-    for case_num in cases:
-        match case_num:
-            case 0:  # Down
-                if 0 <= check_below < canvas_mouse_pos.shape[0]:
-                    b, g, r = canvas_mouse_pos[check_below, circle_pos_x]
-                    if b < 200 and g < 200 and r < 200:
-                        print("Movable path below")
-                        return "Down"
+    valid_moves = []
 
-            case 1:  # Up
-                if 0 <= check_above < canvas_mouse_pos.shape[0]:
-                    b, g, r = canvas_mouse_pos[check_above, circle_pos_x]
-                    if b < 200 and g < 200 and r < 200:
-                        print("Movable path above")
-                        return "Up"
+    for direction, (cy, cx) in directions.items():
+        if 0 <= cy < canvas_mouse_pos.shape[0] and 0 <= cx < canvas_mouse_pos.shape[1]:
+            b, g, r = canvas_mouse_pos[cy, cx]
+            if g >= 120 and r <= 20 and b <= 20:
+                print("Found green goal block, moving to it")
+                valid_moves.clear()
+                valid_moves.append(direction)
+                return random.choice(valid_moves)
+            
+            elif b < 200 and g < 200 and r < 200:   
+                print(f"Movable path {direction.lower()}")
+                valid_moves.append(direction)
 
-            case 2:  # Left
-                if 0 <= check_left < canvas_mouse_pos.shape[1]:
-                    b, g, r = canvas_mouse_pos[circle_pos_y, check_left]
-                    if b < 200 and g < 200 and r < 200:
-                        print("Movable path left")
-                        return "Left"
-
-            case 3:  # Right
-                if 0 <= check_right < canvas_mouse_pos.shape[1]:
-                    b, g, r = canvas_mouse_pos[circle_pos_y, check_right]
-                    if b < 200 and g < 200 and r < 200:
-                        print("Movable path right")
-                        return "Right"
-
-    # If no valid move is found, return None or a default direction
-    print("No valid moves found, staying in place")
-    return None
+    print(f"Valid moves: {valid_moves}")
+    return random.choice(valid_moves) if valid_moves else None

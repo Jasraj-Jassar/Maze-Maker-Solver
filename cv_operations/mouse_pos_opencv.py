@@ -23,7 +23,7 @@ def mouse_pos_opencv(canvas_img):
         param1=100,
         param2=15,           # Lower for higher sensitivity as we can only see red mouse in canvas_mask_img
         minRadius=15,
-        maxRadius=40
+        maxRadius=70
     )
     
     if circles_pos is not None:

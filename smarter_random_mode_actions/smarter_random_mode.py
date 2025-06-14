@@ -7,7 +7,7 @@ from smarter_random_mode_actions.smarter_random_solver import smarter_random_sol
 from parameters import row, col, next_random_move
 from grid_gen_and_utils.Initialize import maze_board
 
-def smarter_random_mode(event=None, is_simulated=False):
+def smarter_random_mode(event=None):
     global next_random_move  # Add this to access the global variable
     
     # Get current state
@@ -15,15 +15,13 @@ def smarter_random_mode(event=None, is_simulated=False):
     current_row, current_col = maze_board.get_position()
     
     # Get move direction
-    if is_simulated:
-        print(f"Simulating keypress: {next_random_move}")
-        if next_random_move is None:
-            # If no valid move was found, try again after a short delay
-            maze_board.get_window().after(100, lambda:smarter_random_mode(is_simulated=True))
-            return
-        row_change, col_change = keyboard_interface(SimpleNamespace(keysym=next_random_move))
-    else:
-        row_change, col_change = keyboard_interface(event)
+
+    print(f"Simulating keypress: {next_random_move}")
+    if next_random_move is None:
+        # If no valid move was found, try again after a short delay
+        maze_board.get_window().after(100, lambda:smarter_random_mode())
+        return
+    row_change, col_change = keyboard_interface(SimpleNamespace(keysym=next_random_move))
     
     # Update position
     current_row += row_change
@@ -37,10 +35,7 @@ def smarter_random_mode(event=None, is_simulated=False):
 
     maze_board.update_position(current_row, current_col)
     
-    # Process image and get next move
-    canvas_img = capture_canvas(board)
-    canvas_mouse_pos, circles_pos = mouse_pos_opencv(canvas_img)
-    next_random_move = smarter_random_solver(canvas_mouse_pos, circles_pos)
+
     
     # Check for completion
     if current_row == row - 1 and current_col == col - 1:
@@ -48,10 +43,13 @@ def smarter_random_mode(event=None, is_simulated=False):
         maze_board.get_window().quit()
         return
     
+    # Process image and get next move
+    canvas_img = capture_canvas(board)
+    canvas_mouse_pos, circles_pos = mouse_pos_opencv(canvas_img)
+    next_random_move = smarter_random_solver(canvas_mouse_pos, circles_pos)
     # Update OpenCV window
     cv2.imshow("Maze smarter_random_mode", canvas_mouse_pos)
     cv2.waitKey(1)
     
     # Schedule next move if this was a simulated move
-    if is_simulated:
-        maze_board.get_window().after(100, lambda:smarter_random_mode(is_simulated=True)) 
+    maze_board.get_window().after(100, lambda:smarter_random_mode()) 

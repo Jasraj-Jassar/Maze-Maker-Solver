@@ -33,11 +33,11 @@ if selected_solver == "manual_mode":
 
 if selected_solver == "random_mode":
     # Start automatic simulation
-    maze_board.get_window().after(100, lambda: random_mode(is_simulated=True))
+    maze_board.get_window().after(100, lambda: random_mode())
 
 if selected_solver == "smarter_random_mode":
     # Start automatic simulation with smarter approach
-    maze_board.get_window().after(100, lambda: smarter_random_mode(is_simulated=True))
+    maze_board.get_window().after(100, lambda: smarter_random_mode())
 
 # Start the main event loop
 maze_board.get_window().mainloop() 

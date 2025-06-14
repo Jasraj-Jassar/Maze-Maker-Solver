@@ -48,6 +48,16 @@ Clone the repository and run the script:
 ```bash
 git clone https://github.com/yourusername/maze-maker-solver.git
 cd maze-maker-solver
+python -m venv venv
+
+# Activate the virtual environment if not already activated.
+# On Linux/macOS:
+source venv/bin/activate
+
+# On Windows (uncomment the line below if you are on Windows):
+# .\venv\Scripts\activate
+
+pip install -r requirements.txt
 python main.py
 ```
 
