@@ -1,45 +1,28 @@
 import cv2
 from types import SimpleNamespace
-from manual_mode_actions.keyboard_interface import keyboard_interface
 from cv_operations.capture_canvas import capture_canvas
 from cv_operations.mouse_pos_opencv import mouse_pos_opencv
 from smarter_random_mode_actions.smarter_random_solver import smarter_random_solver
-from parameters import row, col, next_random_move
+from parameters import next_random_move
 from grid_gen_and_utils.Initialize import maze_board
+from grid_gen_and_utils.updatePos import update_position
 
 def smarter_random_mode(event=None):
     global next_random_move  # Add this to access the global variable
     
     # Get current state
     board = maze_board.get_board()
-    current_row, current_col = maze_board.get_position()
     
     # Get move direction
     print(f"Simulating keypress: {next_random_move}")
+
     if next_random_move is None:
         # If no valid move was found, try again after a short delay
         maze_board.get_window().after(100, lambda:smarter_random_mode())
         return
-    row_change, col_change = keyboard_interface(SimpleNamespace(keysym=next_random_move))
     
-    # Update position
-    current_row += row_change
-    current_col += col_change
-    # Keep within bounds
-    current_row = max(0, min(current_row, row - 1))
-    current_col = max(0, min(current_col, col - 1))
-    # Update display
-    print(f"Current Position: ({current_row}, {current_col})")
-    maze_board.clear_board()
-
-    maze_board.update_position(current_row, current_col)
-    
-
-    # Check for completion
-    if current_row == row - 1 and current_col == col - 1:
-        print("Reached the end of the maze!")
-        maze_board.get_window().quit()
-        return
+    # moves to the next position based on next_random_move using update_position
+    update_position(SimpleNamespace(keysym=next_random_move))
     
     # Process image and get next move
     canvas_img = capture_canvas(board)
