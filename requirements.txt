@@ -1,6 +1,6 @@
 --only-binary=:all:
 
-pygame==2.5.2
-numpy==1.26.4
+pygame==2.6.1
+numpy==2.2.5
 pillow==11.2.1
 opencv-python==4.11.0.86

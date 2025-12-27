@@ -41,6 +41,12 @@ This is the most time-consuming and inefficient method, but it works.
 - If there's a wall, it retries with a new random direction.
 - This process continues until the end point is reached.
 
+**2nd Solution – Smarter Random Maze Solving Algorithm**  
+The smarter solver still moves randomly, but it samples the four neighboring cells around the mouse (three directions plus the current goal direction) and inspects the pixel colors (`smarter_random_mode_actions/smarter_random_solver.py:16-39`).
+
+- A green block (`g >= 120`, `r/b <= 20`) is treated as the goal and immediately chosen so the solver can home in on the end point.
+- Otherwise any dark block (`r/g/b < 200`) is considered a passable path and added to the valid moves before picking one at random, which keeps the mouse exploring only walkable tiles while still avoiding overly deterministic behavior.
+
 ## Getting Started
 
 Clone the repository and run the script:
@@ -60,6 +66,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 python main.py
 ```
+
+## System dependencies
+
+- `Tkinter` is required for the GUI (`_tkinter` is part of the Python standard library but ships separately on some systems). Install it with `sudo apt install python3-tk` (Debian/Ubuntu) or your OS-equivalent package manager before running the project.
+- On Arch Linux, install the `tk` package with `sudo pacman -S tk`.
 
 ## Acknowledgements
 
