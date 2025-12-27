@@ -15,7 +15,6 @@ def smarter_random_mode(event=None):
     current_row, current_col = maze_board.get_position()
     
     # Get move direction
-
     print(f"Simulating keypress: {next_random_move}")
     if next_random_move is None:
         # If no valid move was found, try again after a short delay
@@ -36,7 +35,6 @@ def smarter_random_mode(event=None):
     maze_board.update_position(current_row, current_col)
     
 
-    
     # Check for completion
     if current_row == row - 1 and current_col == col - 1:
         print("Reached the end of the maze!")
