@@ -10,6 +10,7 @@ Instead of taking the array and processing it, plan is to use OpenCV and treat i
 - Random maze generation
 - Simple pathfinding algorithm
 - Visual representation using basic libraries
+- Dijkstra shortest-path solver
 
 ## How It generates a maze
 
@@ -46,6 +47,9 @@ The smarter solver still moves randomly, but it samples the four neighboring cel
 
 - A green block (`g >= 120`, `r/b <= 20`) is treated as the goal and immediately chosen so the solver can home in on the end point.
 - Otherwise any dark block (`r/g/b < 200`) is considered a passable path and added to the valid moves before picking one at random, which keeps the mouse exploring only walkable tiles while still avoiding overly deterministic behavior.
+
+**3rd Solution – Dijkstra Shortest-Path Algorithm**  
+The Dijkstra solver reads the generated maze grid directly (instead of using OpenCV), computes the shortest path from the current position to the bottom-right goal, and then simulates the moves step-by-step on the Tkinter board (`dijkstra_algorithm_mode_actions/dijkstra_solver.py` and `dijkstra_algorithm_mode_actions/dijkstra_mode.py`).
 
 ## Getting Started
 

@@ -29,6 +29,9 @@ class MazeBoard:
     def get_board(self):
         return self.board
     
+    def get_maze(self):
+        return self.maze
+
     def get_window(self):
         return self.window
     
