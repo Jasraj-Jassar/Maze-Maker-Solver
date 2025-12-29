@@ -5,7 +5,7 @@ from cv_operations.mouse_pos_opencv import mouse_pos_opencv
 from smarter_random_mode_actions.smarter_random_solver import smarter_random_solver
 from parameters import next_random_move
 from grid_gen_and_utils.Initialize import maze_board
-from grid_gen_and_utils.updatePos import update_position
+from utils.updatePos import update_position
 
 def smarter_random_mode(event=None):
     global next_random_move  # Add this to access the global variable

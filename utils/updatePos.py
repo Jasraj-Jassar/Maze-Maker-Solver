@@ -1,4 +1,4 @@
-from grid_gen_and_utils.keyboard_interface import keyboard_interface
+from utils.keyboard_interface import keyboard_interface
 from parameters import row, col
 from grid_gen_and_utils.Initialize import maze_board
 

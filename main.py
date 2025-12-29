@@ -1,42 +1,11 @@
 import parameters
-
-def select_mode():
-    print("\n=== Maze Solver Mode Selection ===")
-    print("1. Manual Mode (Control with keyboard)")
-    print("2. Random Mode (Basic random movement)")
-    print("3. Smarter Random Mode (Enhanced random movement)")
-    print("4. Dijkstra Mode (Shortest path)")
-    
-    while True:
-        try:
-            choice = int(input("\nSelect a mode (1-4): "))
-            if choice > 0 and choice < 5:
-                return choice
-        except ValueError:
-            print("Please enter a valid number")
-
-def select_grid_size():
-    default_size = parameters.row
-
-    while True:
-        raw = input(f"\nEnter grid size (N for NxN, default {default_size}): ").strip()
-        if not raw:
-            return default_size
-
-        try:
-            size = int(raw)
-        except ValueError:
-            print("Please enter a valid number")
-            continue
-
-        if size < 2:
-            print("Grid size must be at least 2")
-            continue
-
-        return size
+from utils.setup_dialog import get_settings
 
 def main():
-    grid_size = select_grid_size()
+    grid_size, selected_solver = get_settings()
+    if grid_size is None or selected_solver is None:
+        return
+
     parameters.row = grid_size
     parameters.col = grid_size
 
@@ -46,9 +15,6 @@ def main():
     from random_mode_actions.random_mode import random_mode
     from smarter_random_mode_actions.smarter_random_mode import smarter_random_mode
     from dijkstra_algorithm_mode_actions.dijkstra_mode import dijkstra_mode
-
-    # Get user's mode selection
-    selected_solver = select_mode()
 
     window = maze_board.get_window()
     SOLVERS = {

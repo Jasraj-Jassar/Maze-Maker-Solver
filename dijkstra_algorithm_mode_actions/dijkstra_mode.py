@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 from dijkstra_algorithm_mode_actions.dijkstra_solver import dijkstra_solver
 from grid_gen_and_utils.Initialize import maze_board
-from grid_gen_and_utils.updatePos import update_position
+from utils.updatePos import update_position
 
 dijkstra_path = None
 dijkstra_index = 0

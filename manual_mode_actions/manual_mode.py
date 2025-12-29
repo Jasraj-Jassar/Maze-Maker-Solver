@@ -1,7 +1,7 @@
-from grid_gen_and_utils.keyboard_interface import keyboard_interface
+from utils.keyboard_interface import keyboard_interface
 from parameters import row, col
 from grid_gen_and_utils.Initialize import maze_board
-from grid_gen_and_utils.updatePos import update_position
+from utils.updatePos import update_position
 
 def manual_mode(event):
 
