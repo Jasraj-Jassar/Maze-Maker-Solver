@@ -3,7 +3,7 @@
 A Python project that generates mazes and finds paths through them.
 
 Love Problem Solving So... Created my own challenge  
-Instead of taking the array and processing it, plan is to use OpenCV and treat it as a vision system challenge.
+Maze generation and solvers operate directly on the grid data.
 
 ## Features
 
@@ -36,20 +36,15 @@ A → B → G → H → I → N → S → X → Y
 **1st Solution – Random Maze Solving Algorithm**  
 This is the most time-consuming and inefficient method, but it works.
 
-- The script uses OpenCV to capture the current Tkinter window and detect the red maze mouse location.
-- It then randomly chooses a direction (up, down, left, right).
-- Before moving, it checks if there's a wall in that direction.
-- If there's a wall, it retries with a new random direction.
+- The solver reads the maze grid and randomly chooses a valid direction (up, down, left, right).
+- It avoids walls by checking neighboring cells before moving.
 - This process continues until the end point is reached.
 
 **2nd Solution – Smarter Random Maze Solving Algorithm**  
-The smarter solver still moves randomly, but it samples the four neighboring cells around the mouse (three directions plus the current goal direction) and inspects the pixel colors (`smarter_random_mode_actions/smarter_random_solver.py:16-39`).
-
-- A green block (`g >= 120`, `r/b <= 20`) is treated as the goal and immediately chosen so the solver can home in on the end point.
-- Otherwise any dark block (`r/g/b < 200`) is considered a passable path and added to the valid moves before picking one at random, which keeps the mouse exploring only walkable tiles while still avoiding overly deterministic behavior.
+The smarter solver still moves randomly, but it biases moves toward the goal by preferring steps that reduce the Manhattan distance.
 
 **3rd Solution – Dijkstra Shortest-Path Algorithm**  
-The Dijkstra solver reads the generated maze grid directly (instead of using OpenCV), computes the shortest path from the current position to the bottom-right goal, and then simulates the moves step-by-step on the Tkinter board (`dijkstra_algorithm_mode_actions/dijkstra_solver.py` and `dijkstra_algorithm_mode_actions/dijkstra_mode.py`).
+The Dijkstra solver reads the generated maze grid directly, computes the shortest path from the current position to the bottom-right goal, and then simulates the moves step-by-step on the Tkinter board (`dijkstra_algorithm_mode_actions/dijkstra_solver.py` and `dijkstra_algorithm_mode_actions/dijkstra_mode.py`).
 
 ## Getting Started
 
@@ -80,6 +75,4 @@ python main.py
 
 This project is powered by:
 
-- [OpenCV](https://opencv.org/) – For real-time computer vision tasks  
 - [Tkinter](https://docs.python.org/3/library/tkinter.html) – For GUI window rendering  
-- [NumPy](https://numpy.org/) – For efficient maze mouse detection(circle finding algorithm)

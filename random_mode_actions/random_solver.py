@@ -1,28 +1,26 @@
-import cv2
 import random
 
 
 #Random maze solver it will use random moves to find a path from the start till the end of the maze.
-def random_solver(canvas_mouse_pos, circles_pos):
+def random_solver(maze, position):
+    if not maze or not maze[0]:
+        return None
 
-    # check if the top of the mouse is movable path
-    circle_pos_x = int(circles_pos[0][0][0])  # x
-    circle_pos_y = int(circles_pos[0][0][1])  # y
-   
+    x, y = position
+    rows = len(maze)
+    cols = len(maze[0])
+
     directions = {
-        "Down": (circle_pos_y + 60, circle_pos_x),
-        "Up": (circle_pos_y - 60, circle_pos_x),
-        "Left": (circle_pos_y, circle_pos_x - 60),
-        "Right": (circle_pos_y, circle_pos_x + 60),
+        "Up": (x, y - 1),
+        "Down": (x, y + 1),
+        "Left": (x - 1, y),
+        "Right": (x + 1, y),
     }
 
-    valid_moves = []
-
-    for direction, (cy, cx) in directions.items():
-        if 0 <= cy < canvas_mouse_pos.shape[0] and 0 <= cx < canvas_mouse_pos.shape[1]:
-            b, g, r = canvas_mouse_pos[cy, cx]
-            if b < 200 and g < 200 and r < 200:
-                print(f"Movable path {direction.lower()}")
-                valid_moves.append(direction)
+    valid_moves = [
+        direction
+        for direction, (nx, ny) in directions.items()
+        if 0 <= nx < cols and 0 <= ny < rows and maze[ny][nx] == 0
+    ]
 
     return random.choice(valid_moves) if valid_moves else None

@@ -1,39 +1,40 @@
-import cv2
 import random
 
 
 #Random maze solver it will use random moves to find a path from the start till the end of the maze.
 #Parent - random_maze_solver 
-#Child - smarter_random_solver - added funtionality to check if the next block is green if true then moves to green block.
+#Child - smarter_random_solver - biases moves toward the goal.
 
-def smarter_random_solver(canvas_mouse_pos, circles_pos):
+def smarter_random_solver(maze, position):
+    if not maze or not maze[0]:
+        return None
 
-    # check if the top of the mouse is movable path
-    circle_pos_x = int(circles_pos[0][0][0])  # x
-    circle_pos_y = int(circles_pos[0][0][1])  # y
-
+    x, y = position
+    rows = len(maze)
+    cols = len(maze[0])
+    goal_x, goal_y = cols - 1, rows - 1
 
     directions = {
-        "Down": (circle_pos_y + 60, circle_pos_x),
-        "Up": (circle_pos_y - 60, circle_pos_x),
-        "Left": (circle_pos_y, circle_pos_x - 60),
-        "Right": (circle_pos_y, circle_pos_x + 60),
+        "Up": (x, y - 1),
+        "Down": (x, y + 1),
+        "Left": (x - 1, y),
+        "Right": (x + 1, y),
     }
 
+    best_moves = []
+    best_dist = None
     valid_moves = []
 
-    for direction, (cy, cx) in directions.items():
-        if 0 <= cy < canvas_mouse_pos.shape[0] and 0 <= cx < canvas_mouse_pos.shape[1]:
-            b, g, r = canvas_mouse_pos[cy, cx]
-            if g >= 120 and r <= 20 and b <= 20:
-                print("Found green goal block, moving to it")
-                valid_moves.clear()
-                valid_moves.append(direction)
-                return random.choice(valid_moves)
-            
-            elif b < 200 and g < 200 and r < 200:   
-                print(f"Movable path {direction.lower()}")
-                valid_moves.append(direction)
+    for direction, (nx, ny) in directions.items():
+        if 0 <= nx < cols and 0 <= ny < rows and maze[ny][nx] == 0:
+            valid_moves.append(direction)
+            dist = abs(goal_x - nx) + abs(goal_y - ny)
+            if best_dist is None or dist < best_dist:
+                best_dist = dist
+                best_moves = [direction]
+            elif dist == best_dist:
+                best_moves.append(direction)
 
-    print(f"Valid moves: {valid_moves}")
+    if best_moves:
+        return random.choice(best_moves)
     return random.choice(valid_moves) if valid_moves else None
