@@ -1,5 +1,7 @@
 # Maze Maker Solver
 ![Status: Completed](https://img.shields.io/badge/Status-Completed-brightgreen)
+
+
 A Python project that generates mazes and finds paths through them.
 
 Love Problem Solving So... Created my own challenge  
